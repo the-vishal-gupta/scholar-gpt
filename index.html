@@ -1,15 +1,1557 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Professional AI/ML Research Discovery Platform - Search, analyze, and discover influential research papers" />
-    <meta name="keywords" content="AI, Machine Learning, Research Papers, Citations, Scopus, Google Scholar" />
-    <title>ScholarGpt - Professional Research Platform</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" />
+    <title>ScholarLens - Research Paper Analysis</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "DM Sans", sans-serif;
+      }
+      .font-serif {
+        font-family: "Crimson Pro", serif;
+      }
+      .gradient-mesh {
+        background: linear-gradient(
+          135deg,
+          #0c1220 0%,
+          #1a2744 50%,
+          #0f1729 100%
+        );
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .glow-accent {
+        box-shadow: 0 0 60px rgba(99, 179, 237, 0.15);
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .float-animation {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      .chat-bubble {
+        background: linear-gradient(
+          135deg,
+          rgba(99, 179, 237, 0.1),
+          rgba(129, 140, 248, 0.1)
+        );
+        border: 1px solid rgba(99, 179, 237, 0.2);
+      }
+    </style>
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="h-full overflow-auto gradient-mesh text-gray-100">
+    <div id="app" class="h-full w-full">
+      <!-- Landing Page -->
+      <div id="landing-page" class="min-h-full w-full">
+        <!-- Navigation -->
+        <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+          <div
+            class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+              <span
+                id="nav-title"
+                class="text-xl font-bold bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent"
+                >ScholarLens</span
+              >
+            </div>
+            <div class="flex items-center gap-4">
+              <button
+                onclick="showPage('signin')"
+                class="px-5 py-2 text-gray-300 hover:text-white transition-colors font-medium"
+              >
+                Sign In
+              </button>
+              <button
+                onclick="showPage('signup')"
+                class="px-6 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 rounded-xl font-semibold transition-all transform hover:scale-105"
+              >
+                Get Started
+              </button>
+            </div>
+          </div>
+        </nav>
+        <!-- Hero Section -->
+        <section class="pt-32 pb-20 px-6">
+          <div class="max-w-6xl mx-auto text-center">
+            <div
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 fade-in"
+              style="animation-delay: 0.1s"
+            >
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+              ></span>
+              <span class="text-sm text-gray-400">Powered by Advanced AI</span>
+            </div>
+            <h1
+              id="hero-heading"
+              class="font-serif text-5xl md:text-7xl font-bold mb-6 leading-tight fade-in"
+              style="animation-delay: 0.2s"
+            >
+              <span
+                class="bg-gradient-to-r from-white via-sky-200 to-indigo-200 bg-clip-text text-transparent"
+                >Unlock Research</span
+              >
+              <br /><span
+                class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent"
+                >Insights Instantly</span
+              >
+            </h1>
+            <p
+              id="hero-subtext"
+              class="text-xl text-gray-400 max-w-2xl mx-auto mb-10 fade-in"
+              style="animation-delay: 0.3s"
+            >
+              Analyze, discover, and collaborate on academic papers with our
+              intelligent research platform
+            </p>
+            <div
+              class="flex flex-col sm:flex-row gap-4 justify-center fade-in"
+              style="animation-delay: 0.4s"
+            >
+              <button
+                onclick="showPage('signup')"
+                class="px-8 py-4 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 rounded-2xl font-semibold text-lg transition-all transform hover:scale-105 glow-accent"
+              >
+                Start Exploring Free
+              </button>
+              <button
+                onclick="showPage('about')"
+                class="px-8 py-4 glass-card rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all"
+              >
+                Learn More
+              </button>
+            </div>
+          </div>
+          <!-- Floating Cards -->
+          <div class="max-w-5xl mx-auto mt-20 grid md:grid-cols-3 gap-6">
+            <div
+              class="glass-card rounded-2xl p-6 float-animation"
+              style="animation-delay: 0s"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">Smart Search</h3>
+              <p class="text-gray-400 text-sm">
+                Find papers by author, title, journal, or conference with
+                advanced filters
+              </p>
+            </div>
+            <div
+              class="glass-card rounded-2xl p-6 float-animation"
+              style="animation-delay: 0.5s"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-4"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">AI Assistant</h3>
+              <p class="text-gray-400 text-sm">
+                Get instant answers and summaries with our intelligent chatbot
+              </p>
+            </div>
+            <div
+              class="glass-card rounded-2xl p-6 float-animation"
+              style="animation-delay: 1s"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center mb-4"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">Collaborate</h3>
+              <p class="text-gray-400 text-sm">
+                Share insights and discuss findings with the research community
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- Sign In Page -->
+      <div
+        id="signin-page"
+        class="hidden min-h-full w-full flex items-center justify-center px-6 py-20"
+      >
+        <div class="w-full max-w-md">
+          <button
+            onclick="showPage('landing')"
+            class="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to Home
+          </button>
+          <div class="glass-card rounded-3xl p-8 glow-accent">
+            <div class="text-center mb-8">
+              <div
+                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center mx-auto mb-4"
+              >
+                <svg
+                  class="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold">Welcome Back</h2>
+              <p class="text-gray-400 mt-2">
+                Sign in to continue your research
+              </p>
+            </div>
+            <form onsubmit="handleSignIn(event)" class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="signin-email"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  id="signin-password"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all"
+                  placeholder="••••••••"
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full py-3.5 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 rounded-xl font-semibold transition-all transform hover:scale-[1.02]"
+              >
+                Sign In
+              </button>
+            </form>
+            <p class="text-center mt-6 text-gray-400">
+              Don't have an account?
+              <button
+                onclick="showPage('signup')"
+                class="text-sky-400 hover:text-sky-300 font-medium"
+              >
+                Sign Up
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Sign Up Page -->
+      <div
+        id="signup-page"
+        class="hidden min-h-full w-full flex items-center justify-center px-6 py-20"
+      >
+        <div class="w-full max-w-md">
+          <button
+            onclick="showPage('landing')"
+            class="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to Home
+          </button>
+          <div class="glass-card rounded-3xl p-8 glow-accent">
+            <div class="text-center mb-8">
+              <div
+                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mx-auto mb-4"
+              >
+                <svg
+                  class="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                  />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold">Create Account</h2>
+              <p class="text-gray-400 mt-2">Join the research community</p>
+            </div>
+            <form onsubmit="handleSignUp(event)" class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Full Name</label
+                >
+                <input
+                  type="text"
+                  id="signup-name"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="signup-email"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  id="signup-password"
+                  required
+                  minlength="6"
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all"
+                  placeholder="••••••••"
+                />
+              </div>
+              <button
+                type="submit"
+                id="signup-btn"
+                class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 rounded-xl font-semibold transition-all transform hover:scale-[1.02]"
+              >
+                Create Account
+              </button>
+            </form>
+            <p class="text-center mt-6 text-gray-400">
+              Already have an account?
+              <button
+                onclick="showPage('signin')"
+                class="text-emerald-400 hover:text-emerald-300 font-medium"
+              >
+                Sign In
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Main Dashboard -->
+      <div id="main-page" class="hidden min-h-full w-full">
+        <!-- Dashboard Nav -->
+        <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+          <div
+            class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+              <span
+                id="dashboard-title"
+                class="text-xl font-bold bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent"
+                >ScholarLens</span
+              >
+            </div>
+            <div class="flex items-center gap-6">
+              <button
+                onclick="showSection('search')"
+                class="text-gray-300 hover:text-white transition-colors font-medium"
+              >
+                Search
+              </button>
+              <button
+                onclick="showPage('about')"
+                class="text-gray-300 hover:text-white transition-colors font-medium"
+              >
+                About
+              </button>
+              <button
+                onclick="showPage('contact')"
+                class="text-gray-300 hover:text-white transition-colors font-medium"
+              >
+                Contact
+              </button>
+              <button
+                onclick="showPage('profile')"
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center hover:scale-110 transition-transform"
+              >
+                <span id="profile-initial" class="text-sm font-bold">U</span>
+              </button>
+            </div>
+          </div>
+        </nav>
+        <!-- Search Section -->
+        <section id="search-section" class="pt-28 pb-10 px-6">
+          <div class="max-w-4xl mx-auto">
+            <h2 class="font-serif text-3xl font-bold text-center mb-8">
+              Discover Research Papers
+            </h2>
+            <!-- Search Bar -->
+            <div class="glass-card rounded-2xl p-6 mb-8">
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                  <svg
+                    class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    /></svg
+                  ><input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search papers, authors, topics..."
+                    class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all"
+                  />
+                </div>
+                <select
+                  id="search-type"
+                  class="px-4 py-3.5 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Fields</option>
+                  <option value="title">Paper Title</option>
+                  <option value="author">Author Name</option>
+                  <option value="keyword">Keywords</option>
+                </select>
+              </div>
+              <!-- Advanced Filters -->
+              <div class="grid md:grid-cols-3 gap-4 mt-4">
+                <select
+                  id="publication-type"
+                  class="px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none cursor-pointer text-sm"
+                >
+                  <option value="">Publication Type</option>
+                  <option value="journal">Journal Articles</option>
+                  <option value="conference">Conference Papers</option>
+                  <option value="preprint">Preprints</option>
+                  <option value="thesis">Theses</option>
+                </select>
+                <select
+                  id="year-filter"
+                  class="px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none cursor-pointer text-sm"
+                >
+                  <option value="">Year Published</option>
+                  <option value="2024">2024</option>
+                  <option value="2023">2023</option>
+                  <option value="2022">2022</option>
+                  <option value="2021">2021</option>
+                  <option value="older">Before 2021</option>
+                </select>
+                <select
+                  id="field-filter"
+                  class="px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none cursor-pointer text-sm"
+                >
+                  <option value="">Research Field</option>
+                  <option value="cs">Computer Science</option>
+                  <option value="physics">Physics</option>
+                  <option value="biology">Biology</option>
+                  <option value="medicine">Medicine</option>
+                  <option value="engineering">Engineering</option>
+                </select>
+              </div>
+              <button
+                onclick="performSearch()"
+                class="w-full mt-4 py-3.5 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 rounded-xl font-semibold transition-all"
+              >
+                Search Papers
+              </button>
+            </div>
+            <!-- Search Results -->
+            <div id="search-results" class="space-y-4">
+              <!-- Sample Results -->
+              <div
+                class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer"
+                onclick="showPaperDetail('1')"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <span
+                      class="inline-block px-3 py-1 rounded-full bg-sky-500/20 text-sky-400 text-xs font-medium mb-3"
+                      >Journal Article</span
+                    >
+                    <h3
+                      class="text-lg font-semibold mb-2 hover:text-sky-400 transition-colors"
+                    >
+                      Deep Learning Approaches for Natural Language Processing:
+                      A Comprehensive Survey
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                      Smith, J., Johnson, M., Williams, K.
+                    </p>
+                    <p class="text-gray-500 text-sm">
+                      Nature Machine Intelligence • 2024 • 1,234 citations
+                    </p>
+                  </div>
+                  <button
+                    class="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer"
+                onclick="showPaperDetail('2')"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <span
+                      class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium mb-3"
+                      >Conference Paper</span
+                    >
+                    <h3
+                      class="text-lg font-semibold mb-2 hover:text-sky-400 transition-colors"
+                    >
+                      Transformer Architectures for Vision: From ViT to Modern
+                      Variants
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                      Chen, L., Park, S., Anderson, R.
+                    </p>
+                    <p class="text-gray-500 text-sm">
+                      NeurIPS 2023 • 856 citations
+                    </p>
+                  </div>
+                  <button
+                    class="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer"
+                onclick="showPaperDetail('3')"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <span
+                      class="inline-block px-3 py-1 rounded-full bg-violet-500/20 text-violet-400 text-xs font-medium mb-3"
+                      >Preprint</span
+                    >
+                    <h3
+                      class="text-lg font-semibold mb-2 hover:text-sky-400 transition-colors"
+                    >
+                      Quantum Computing Applications in Drug Discovery: Current
+                      Progress and Challenges
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                      Martinez, A., Brown, D., Taylor, E.
+                    </p>
+                    <p class="text-gray-500 text-sm">
+                      arXiv • 2024 • 234 citations
+                    </p>
+                  </div>
+                  <button
+                    class="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Comments Section -->
+        <section class="pb-20 px-6">
+          <div class="max-w-4xl mx-auto">
+            <div class="glass-card rounded-2xl p-6">
+              <h3 class="text-xl font-semibold mb-6 flex items-center gap-3">
+                <svg
+                  class="w-6 h-6 text-sky-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                  />
+                </svg>
+                Community Discussion
+              </h3>
+              <!-- Comment Form -->
+              <form onsubmit="addComment(event)" class="mb-6">
+                <textarea
+                  id="comment-input"
+                  rows="3"
+                  placeholder="Share your thoughts on recent research..."
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all resize-none"
+                ></textarea>
+                <div class="flex justify-end mt-3">
+                  <button
+                    type="submit"
+                    id="comment-btn"
+                    class="px-6 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 rounded-xl font-semibold transition-all"
+                  >
+                    Post Comment
+                  </button>
+                </div>
+              </form>
+              <!-- Comments List -->
+              <div id="comments-list" class="space-y-4">
+                <p class="text-gray-500 text-center py-8">
+                  Be the first to start a discussion!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Chatbot -->
+        <div id="chatbot-container" class="fixed bottom-6 right-6 z-50">
+          <div
+            id="chat-window"
+            class="hidden glass-card rounded-2xl w-80 md:w-96 mb-4 overflow-hidden"
+          >
+            <div
+              class="bg-gradient-to-r from-sky-500 to-indigo-500 px-4 py-3 flex items-center justify-between"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    />
+                  </svg>
+                </div>
+                <span class="font-semibold text-white">Research Assistant</span>
+              </div>
+              <button
+                onclick="toggleChat()"
+                class="text-white/80 hover:text-white"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div id="chat-messages" class="h-80 overflow-y-auto p-4 space-y-4">
+              <div
+                class="chat-bubble rounded-2xl rounded-tl-sm p-3 max-w-[85%]"
+              >
+                <p class="text-sm">
+                  👋 Hello! I'm your AI research assistant. Ask me anything
+                  about finding papers, understanding research methods, or
+                  analyzing academic content!
+                </p>
+              </div>
+            </div>
+            <div class="p-4 border-t border-white/10">
+              <form onsubmit="sendChatMessage(event)" class="flex gap-2">
+                <input
+                  type="text"
+                  id="chat-input"
+                  placeholder="Ask a question..."
+                  class="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none text-sm"
+                />
+                <button
+                  type="submit"
+                  class="p-2.5 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl hover:from-sky-400 hover:to-indigo-400 transition-all"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                </button>
+              </form>
+            </div>
+          </div>
+          <button
+            onclick="toggleChat()"
+            class="w-14 h-14 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 flex items-center justify-center shadow-lg hover:scale-110 transition-transform glow-accent"
+          >
+            <svg
+              class="w-7 h-7 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- About Page -->
+      <div id="about-page" class="hidden min-h-full w-full pt-20 px-6 pb-20">
+        <div class="max-w-4xl mx-auto">
+          <button
+            onclick="goBack()"
+            class="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back
+          </button>
+          <div class="glass-card rounded-3xl p-8 md:p-12">
+            <h1
+              class="font-serif text-4xl font-bold mb-6 bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent"
+            >
+              About ScholarLens
+            </h1>
+            <div class="space-y-6 text-gray-300">
+              <p class="text-lg leading-relaxed">
+                ScholarLens is a cutting-edge research paper analysis platform
+                designed to revolutionize how researchers, students, and
+                academics discover and interact with scholarly content.
+              </p>
+              <div class="grid md:grid-cols-2 gap-6 mt-8">
+                <div class="bg-white/5 rounded-2xl p-6">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center mb-4"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="text-xl font-semibold mb-2">
+                    AI-Powered Analysis
+                  </h3>
+                  <p class="text-gray-400">
+                    Advanced machine learning algorithms help you understand
+                    complex research papers quickly.
+                  </p>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-6">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-4"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="text-xl font-semibold mb-2">Global Community</h3>
+                  <p class="text-gray-400">
+                    Connect with researchers worldwide and collaborate on
+                    groundbreaking discoveries.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Contact Page -->
+      <div id="contact-page" class="hidden min-h-full w-full pt-20 px-6 pb-20">
+        <div class="max-w-2xl mx-auto">
+          <button
+            onclick="goBack()"
+            class="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back
+          </button>
+          <div class="glass-card rounded-3xl p-8 glow-accent">
+            <h1 class="font-serif text-3xl font-bold mb-2">Contact Us</h1>
+            <p class="text-gray-400 mb-8">
+              Have questions? We'd love to hear from you.
+            </p>
+            <form onsubmit="handleContact(event)" class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Your Name</label
+                >
+                <input
+                  type="text"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2"
+                  >Message</label
+                >
+                <textarea
+                  rows="4"
+                  required
+                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 transition-all resize-none"
+                  placeholder="Your message..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="w-full py-3.5 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 rounded-xl font-semibold transition-all"
+              >
+                Send Message
+              </button>
+            </form>
+            <div
+              id="contact-success"
+              class="hidden mt-4 p-4 rounded-xl bg-emerald-500/20 text-emerald-400 text-center"
+            >
+              ✓ Message sent successfully! We'll get back to you soon.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Profile Page -->
+      <div id="profile-page" class="hidden min-h-full w-full pt-20 px-6 pb-20">
+        <div class="max-w-2xl mx-auto">
+          <button
+            onclick="showPage('main')"
+            class="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to Dashboard
+          </button>
+          <div class="glass-card rounded-3xl p-8">
+            <div class="flex items-center gap-6 mb-8">
+              <div
+                class="w-20 h-20 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-3xl font-bold"
+              >
+                <span id="profile-avatar">U</span>
+              </div>
+              <div>
+                <h1 id="profile-name" class="text-2xl font-bold">User</h1>
+                <p id="profile-email" class="text-gray-400">user@example.com</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mb-8">
+              <div class="bg-white/5 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-sky-400">12</p>
+                <p class="text-gray-400 text-sm">Papers Saved</p>
+              </div>
+              <div class="bg-white/5 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-emerald-400">5</p>
+                <p class="text-gray-400 text-sm">Comments</p>
+              </div>
+              <div class="bg-white/5 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-violet-400">3</p>
+                <p class="text-gray-400 text-sm">Collections</p>
+              </div>
+            </div>
+            <button
+              onclick="handleLogout()"
+              class="w-full py-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-xl font-medium transition-all"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Toast Notification -->
+      <div id="toast" class="fixed bottom-6 left-6 z-50 hidden">
+        <div class="glass-card rounded-xl px-6 py-4 flex items-center gap-3">
+          <span id="toast-icon"></span> <span id="toast-message"></span>
+        </div>
+      </div>
+    </div>
+    <script>
+      // State Management
+      let currentUser = null;
+      let comments = [];
+      let previousPage = "landing";
+
+      // Default Configuration
+      const defaultConfig = {
+        site_title: "ScholarLens",
+        tagline: "Research Paper Analysis",
+        hero_heading: "Unlock Research Insights Instantly",
+        hero_subtext:
+          "Analyze, discover, and collaborate on academic papers with our intelligent research platform",
+        background_color: "#0c1220",
+        surface_color: "#1a2744",
+        text_color: "#f3f4f6",
+        primary_action_color: "#0ea5e9",
+        secondary_action_color: "#818cf8",
+      };
+
+      // Page Navigation
+      function showPage(pageId) {
+        const pages = [
+          "landing",
+          "signin",
+          "signup",
+          "main",
+          "about",
+          "contact",
+          "profile",
+        ];
+        pages.forEach((p) => {
+          document.getElementById(`${p}-page`).classList.add("hidden");
+        });
+        document.getElementById(`${pageId}-page`).classList.remove("hidden");
+
+        if (
+          pageId !== "landing" &&
+          pageId !== "signin" &&
+          pageId !== "signup"
+        ) {
+          previousPage = "main";
+        }
+
+        window.scrollTo(0, 0);
+      }
+
+      function goBack() {
+        if (currentUser) {
+          showPage("main");
+        } else {
+          showPage("landing");
+        }
+      }
+
+      function showSection(sectionId) {
+        document
+          .getElementById("search-section")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Authentication
+      function handleSignIn(e) {
+        e.preventDefault();
+        const email = document.getElementById("signin-email").value;
+        currentUser = { email, name: email.split("@")[0] };
+        updateUserUI();
+        showPage("main");
+        showToast("success", "Welcome back!");
+      }
+
+      async function handleSignUp(e) {
+        e.preventDefault();
+        const btn = document.getElementById("signup-btn");
+        btn.textContent = "Creating Account...";
+        btn.disabled = true;
+
+        const name = document.getElementById("signup-name").value;
+        const email = document.getElementById("signup-email").value;
+
+        try {
+          const result = await window.dataSdk.create({
+            id: Date.now().toString(),
+            type: "user",
+            username: name,
+            email: email,
+            content: "",
+            timestamp: new Date().toISOString(),
+            paper_title: "",
+          });
+
+          if (result.isOk) {
+            currentUser = { name, email };
+            updateUserUI();
+            showPage("main");
+            showToast("success", "Account created successfully!");
+          } else {
+            showToast("error", "Failed to create account");
+          }
+        } catch (err) {
+          showToast("error", "An error occurred");
+        }
+
+        btn.textContent = "Create Account";
+        btn.disabled = false;
+      }
+
+      function handleLogout() {
+        currentUser = null;
+        showPage("landing");
+        showToast("success", "Signed out successfully");
+      }
+
+      function updateUserUI() {
+        if (currentUser) {
+          const initial = currentUser.name
+            ? currentUser.name[0].toUpperCase()
+            : "U";
+          document.getElementById("profile-initial").textContent = initial;
+          document.getElementById("profile-avatar").textContent = initial;
+          document.getElementById("profile-name").textContent =
+            currentUser.name || "User";
+          document.getElementById("profile-email").textContent =
+            currentUser.email || "user@example.com";
+        }
+      }
+
+      // Search
+      function performSearch() {
+        const query = document.getElementById("search-input").value;
+        showToast(
+          "info",
+          query ? `Searching for "${query}"...` : "Showing all papers",
+        );
+      }
+
+      function showPaperDetail(paperId) {
+        showToast("info", "Paper details coming soon!");
+      }
+
+      // Comments
+      async function addComment(e) {
+        e.preventDefault();
+        const input = document.getElementById("comment-input");
+        const content = input.value.trim();
+        if (!content) return;
+
+        if (!currentUser) {
+          showToast("error", "Please sign in to comment");
+          return;
+        }
+
+        const btn = document.getElementById("comment-btn");
+        btn.textContent = "Posting...";
+        btn.disabled = true;
+
+        try {
+          const result = await window.dataSdk.create({
+            id: Date.now().toString(),
+            type: "comment",
+            username: currentUser.name,
+            email: currentUser.email,
+            content: content,
+            timestamp: new Date().toISOString(),
+            paper_title: "",
+          });
+
+          if (result.isOk) {
+            input.value = "";
+            showToast("success", "Comment posted!");
+          } else {
+            showToast("error", "Failed to post comment");
+          }
+        } catch (err) {
+          showToast("error", "An error occurred");
+        }
+
+        btn.textContent = "Post Comment";
+        btn.disabled = false;
+      }
+
+      function renderComments(data) {
+        const commentsList = document.getElementById("comments-list");
+        const commentData = data.filter((item) => item.type === "comment");
+
+        if (commentData.length === 0) {
+          commentsList.innerHTML =
+            '<p class="text-gray-500 text-center py-8">Be the first to start a discussion!</p>';
+          return;
+        }
+
+        commentsList.innerHTML = commentData
+          .map(
+            (comment) => `
+        <div class="bg-white/5 rounded-xl p-4">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-sm font-bold">
+              ${(comment.username || "U")[0].toUpperCase()}
+            </div>
+            <div>
+              <p class="font-medium text-sm">${comment.username || "Anonymous"}</p>
+              <p class="text-gray-500 text-xs">${new Date(comment.timestamp).toLocaleDateString()}</p>
+            </div>
+          </div>
+          <p class="text-gray-300 text-sm pl-11">${comment.content}</p>
+        </div>
+      `,
+          )
+          .join("");
+      }
+
+      // Chatbot
+      function toggleChat() {
+        const chatWindow = document.getElementById("chat-window");
+        chatWindow.classList.toggle("hidden");
+      }
+
+      function sendChatMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById("chat-input");
+        const message = input.value.trim();
+        if (!message) return;
+
+        const chatMessages = document.getElementById("chat-messages");
+
+        // Add user message
+        chatMessages.innerHTML += `
+        <div class="flex justify-end">
+          <div class="bg-sky-500/20 text-sky-100 rounded-2xl rounded-tr-sm p-3 max-w-[85%]">
+            <p class="text-sm">${message}</p>
+          </div>
+        </div>
+      `;
+
+        // Simulate AI response
+        setTimeout(() => {
+          const responses = [
+            "I can help you find papers on that topic! Try using the advanced search filters above.",
+            "Great question! Research in this area has been growing rapidly. Would you like me to suggest some key papers?",
+            "I found several relevant papers. Check the search results for the most cited work in this field.",
+            "That's an interesting research direction! I recommend looking at recent conference proceedings for cutting-edge work.",
+          ];
+          const response =
+            responses[Math.floor(Math.random() * responses.length)];
+
+          chatMessages.innerHTML += `
+          <div class="chat-bubble rounded-2xl rounded-tl-sm p-3 max-w-[85%]">
+            <p class="text-sm">${response}</p>
+          </div>
+        `;
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+
+        input.value = "";
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      // Contact Form
+      function handleContact(e) {
+        e.preventDefault();
+        document.getElementById("contact-success").classList.remove("hidden");
+        e.target.reset();
+        setTimeout(() => {
+          document.getElementById("contact-success").classList.add("hidden");
+        }, 5000);
+      }
+
+      // Toast Notifications
+      function showToast(type, message) {
+        const toast = document.getElementById("toast");
+        const icon = document.getElementById("toast-icon");
+        const msg = document.getElementById("toast-message");
+
+        const icons = {
+          success: "✓",
+          error: "✕",
+          info: "ℹ",
+        };
+
+        const colors = {
+          success: "text-emerald-400",
+          error: "text-red-400",
+          info: "text-sky-400",
+        };
+
+        icon.textContent = icons[type];
+        icon.className = colors[type];
+        msg.textContent = message;
+
+        toast.classList.remove("hidden");
+        setTimeout(() => {
+          toast.classList.add("hidden");
+        }, 3000);
+      }
+
+      // Data Handler
+      const dataHandler = {
+        onDataChanged(data) {
+          renderComments(data);
+        },
+      };
+
+      // Element SDK Config Change Handler
+      async function onConfigChange(config) {
+        const siteTitle = config.site_title || defaultConfig.site_title;
+        const heroHeading = config.hero_heading || defaultConfig.hero_heading;
+        const heroSubtext = config.hero_subtext || defaultConfig.hero_subtext;
+        const bgColor =
+          config.background_color || defaultConfig.background_color;
+        const surfaceColor =
+          config.surface_color || defaultConfig.surface_color;
+        const textColor = config.text_color || defaultConfig.text_color;
+        const primaryColor =
+          config.primary_action_color || defaultConfig.primary_action_color;
+        const secondaryColor =
+          config.secondary_action_color || defaultConfig.secondary_action_color;
+
+        document.getElementById("nav-title").textContent = siteTitle;
+        document.getElementById("dashboard-title").textContent = siteTitle;
+        document.getElementById("hero-heading").innerHTML =
+          `<span class="bg-gradient-to-r from-white via-sky-200 to-indigo-200 bg-clip-text text-transparent">${heroHeading.split(" ").slice(0, 2).join(" ")}</span><br><span class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">${heroHeading.split(" ").slice(2).join(" ")}</span>`;
+        document.getElementById("hero-subtext").textContent = heroSubtext;
+
+        document.body.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${surfaceColor} 50%, ${bgColor} 100%)`;
+        document.body.style.color = textColor;
+      }
+
+      // Initialize SDKs
+      async function init() {
+        // Initialize Element SDK
+        if (window.elementSdk) {
+          window.elementSdk.init({
+            defaultConfig,
+            onConfigChange,
+            mapToCapabilities: (config) => ({
+              recolorables: [
+                {
+                  get: () =>
+                    config.background_color || defaultConfig.background_color,
+                  set: (value) =>
+                    window.elementSdk.setConfig({ background_color: value }),
+                },
+                {
+                  get: () =>
+                    config.surface_color || defaultConfig.surface_color,
+                  set: (value) =>
+                    window.elementSdk.setConfig({ surface_color: value }),
+                },
+                {
+                  get: () => config.text_color || defaultConfig.text_color,
+                  set: (value) =>
+                    window.elementSdk.setConfig({ text_color: value }),
+                },
+                {
+                  get: () =>
+                    config.primary_action_color ||
+                    defaultConfig.primary_action_color,
+                  set: (value) =>
+                    window.elementSdk.setConfig({
+                      primary_action_color: value,
+                    }),
+                },
+                {
+                  get: () =>
+                    config.secondary_action_color ||
+                    defaultConfig.secondary_action_color,
+                  set: (value) =>
+                    window.elementSdk.setConfig({
+                      secondary_action_color: value,
+                    }),
+                },
+              ],
+              borderables: [],
+              fontEditable: undefined,
+              fontSizeable: undefined,
+            }),
+            mapToEditPanelValues: (config) =>
+              new Map([
+                ["site_title", config.site_title || defaultConfig.site_title],
+                ["tagline", config.tagline || defaultConfig.tagline],
+                [
+                  "hero_heading",
+                  config.hero_heading || defaultConfig.hero_heading,
+                ],
+                [
+                  "hero_subtext",
+                  config.hero_subtext || defaultConfig.hero_subtext,
+                ],
+              ]),
+          });
+        }
+
+        // Initialize Data SDK
+        if (window.dataSdk) {
+          const result = await window.dataSdk.init(dataHandler);
+          if (!result.isOk) {
+            console.error("Failed to initialize data SDK");
+          }
+        }
+      }
+
+      init();
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9d7a107c5375540b',t:'MTc3MjcyMzYwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
   </body>
 </html>
